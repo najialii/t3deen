@@ -31,7 +31,6 @@ class TransactionResource extends Resource
 
     protected static ?string $model = Transaction::class;
 
-    // Only Refinery Admins and Sales Managers see Transactions
     public static function shouldRegisterNavigation(): bool
     {
         $user = Auth::user();
@@ -67,7 +66,7 @@ class TransactionResource extends Resource
                 ->required()
                 ->live()
                 ->afterStateUpdated(fn (Set $set) => $set('machine_id', null)),
-            Select::make('machine_id')
+                Select::make('machine_id')
                 ->label('الآلة')
                 ->options(fn (Get $get) => Machine::where('refinery_id', $get('refinery_id'))
                     ->where('is_active', true)->pluck('name', 'id'))

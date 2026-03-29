@@ -27,7 +27,6 @@ class MachineResource extends Resource
 
     protected static ?string $model = Machine::class;
 
-    // Only Refinery Admins and Sales Managers see Machines
     public static function shouldRegisterNavigation(): bool
     {
         $user = Auth::user();
