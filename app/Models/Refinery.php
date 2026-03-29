@@ -35,4 +35,9 @@ class Refinery extends Model
     {
         return $this->hasMany(Transaction::class);
     }
+
+    public function payroll(): HasMany
+{
+    return $this->hasMany(WorkerPay::class);
+}
 }

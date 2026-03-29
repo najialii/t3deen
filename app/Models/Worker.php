@@ -21,4 +21,9 @@ class Worker extends Model
     {
         return $this->hasMany(Transaction::class);
     }
+
+    public function payments(): HasMany
+{
+    return $this->hasMany(WorkerPay::class);
+}
 }

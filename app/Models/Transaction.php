@@ -8,8 +8,16 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class Transaction extends Model
 {
     protected $fillable = [
-        'refinery_id', 'machine_id', 'worker_id', 'sales_manager_id',
-        'unit', 'quantity', 'price_per_unit', 'notes', 'status',
+        'refinery_id',
+        'customer_id',
+        'machine_id',
+        'worker_id',
+        'sales_manager_id',
+        'unit',
+        'quantity',
+        'price_per_unit',
+        'notes',
+        'status',
     ];
 
     protected $casts = [
