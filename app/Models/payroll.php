@@ -49,5 +49,5 @@ protected $casts = [
         static::saving(function ($payroll) {
             $payroll->net_pay = ($payroll->base_salary + $payroll->commissions + $payroll->bonuses) - $payroll->deductions;
         });
-    }
+    }   
 }
