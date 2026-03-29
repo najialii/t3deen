@@ -1,0 +1,30 @@
+@import '../../../../vendor/filament/filament/resources/css/theme.css';
+
+@source '../../../../app/Filament/**/*';
+@source '../../../../resources/views/filament/**/*';
+
+
+/* Hide the standard breadcrumbs for a cleaner header */
+.fi-breadcrumbs {
+    display: none;
+}
+
+/* Apple-style smooth rounding for all cards and inputs */
+.fi-section, .fi-ta-ctn, .fi-modal-window {
+    border-radius: 1rem !important;
+    border: 1px solid rgba(0, 0, 0, 0.05) !important;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.01), 0 2px 4px -1px rgba(0, 0, 0, 0.006) !important;
+}
+
+/* Customize the Topbar to look like a clean App Header */
+.fi-topbar {
+    background-color: rgba(255, 255, 255, 0.8) !important;
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+/* Make the sidebar look more like a "Pro" side-menu */
+.fi-sidebar {
+    background-color: #f8fafc !important; /* Slate 50 */
+    border-inline-start: 1px solid rgba(0, 0, 0, 0.05);
+}
