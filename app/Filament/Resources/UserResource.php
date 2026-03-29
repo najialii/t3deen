@@ -30,7 +30,6 @@ class UserResource extends Resource
     public static function getModelLabel(): string { return 'مستخدم'; }
     public static function getPluralModelLabel(): string { return 'المستخدمون'; }
 
-    // Sales managers cannot access user management at all
     public static function shouldRegisterNavigation(): bool
     {
         return ! (Auth::user()?->isSalesManager() ?? true);
@@ -41,7 +40,6 @@ class UserResource extends Resource
         return ! (Auth::user()?->isSalesManager() ?? true);
     }
 
-    // System admin sees all; refinery admin sees only their refinery's users
     public static function getEloquentQuery(): Builder
     {
         $query = parent::getEloquentQuery();
@@ -51,7 +49,6 @@ class UserResource extends Resource
             return $query;
         }
 
-        // Refinery admin: see only sales managers in their refinery
         return $query->where('refinery_id', $user->refinery_id)
             ->where('role', 'sales_manager');
     }
@@ -88,6 +85,7 @@ class UserResource extends Resource
             TextInput::make('password')
                 ->label('كلمة المرور')
                 ->password()
+                ->revealable()
                 ->required(fn ($record) => $record === null)
                 ->dehydrateStateUsing(fn ($state) => filled($state) ? bcrypt($state) : null)
                 ->dehydrated(fn ($state) => filled($state)),

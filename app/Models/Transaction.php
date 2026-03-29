@@ -13,16 +13,33 @@ class Transaction extends Model
     ];
 
     protected $casts = [
-        'quantity'       => 'decimal:4',
+        'quantity' => 'decimal:4',
         'price_per_unit' => 'decimal:4',
-        'total_amount'   => 'decimal:4',
+        'total_amount' => 'decimal:4',
     ];
 
-    public function refinery(): BelongsTo   { return $this->belongsTo(Refinery::class); }
-    public function machine(): BelongsTo    { return $this->belongsTo(Machine::class); }
-    public function worker(): BelongsTo     { return $this->belongsTo(Worker::class); }
+    public function refinery(): BelongsTo
+    {
+        return $this->belongsTo(Refinery::class);
+    }
+
+    public function machine(): BelongsTo
+    {
+        return $this->belongsTo(Machine::class);
+    }
+
+    public function worker(): BelongsTo
+    {
+        return $this->belongsTo(Worker::class);
+    }
+
     public function salesManager(): BelongsTo
     {
         return $this->belongsTo(User::class, 'sales_manager_id');
+    }
+
+    public function customer(): BelongsTo
+    {
+        return $this->belongsTo(Customer::class);
     }
 }
