@@ -20,6 +20,7 @@ use Filament\Schemas\Schema;
 use Filament\Tables\Table;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
+use Filament\Actions\Action;
 use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
 use Filament\Actions\BulkActionGroup;
@@ -120,7 +121,6 @@ class TransactionResource extends Resource
                         ->label('العنوان'),
                 ])
                 ->createOptionUsing(function (array $data, $get): int {
-                    // Look for refinery_id in current or parent scope
                     $refineryId = $get('refinery_id') ?? $get('../../refinery_id');
                     
                     if (! $refineryId) {
@@ -172,7 +172,7 @@ class TransactionResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('id')->label('#')->sortable(),
-                TextColumn::make('refinery.name')->label('المصفاة')->searchable(),
+                // TextColumn::make('refinery.name')->label('المصفاة')->searchable(),
                 TextColumn::make('machine.name')->label('الآلة')->searchable(),
                 TextColumn::make('worker.name')->label('العامل')->searchable(),
                 TextColumn::make('customer.name')->label('العميل')->searchable(),
@@ -200,7 +200,47 @@ class TransactionResource extends Resource
                     'pending' => 'قيد الانتظار', 'completed' => 'مكتملة', 'cancelled' => 'ملغاة',
                 ]),
             ])
-                              ->actions([ViewAction::make(), EditAction::make()])
+                              ->actions([
+                            Action::make('print_invoice')
+    ->label('طباعة السند')
+    ->icon('heroicon-o-printer')
+    ->color('success')
+    ->action(function (Transaction $record) {
+        $arabic = new \ArPHP\I18N\Arabic();
+
+        $ar = fn($text) => $text ? $arabic->utf8Glyphs($text) : '';
+
+        $data = [
+         'record'         => $record,
+    'title'          => $ar('سند صرف مالي'),
+    'project_name'   => $ar('مشروع تعدين - نظام الإدارة المالية'),
+    'customer_label' => $ar('المستلم:'),
+    'customer_name'  => $ar($record->customer?->name ?? 'غير محدد'),
+    
+    'machine_label'  => $ar('الآلة المستخدمة:'),
+    'machine_name'   => $ar($record->machine?->name ?? '-'),
+    'quantity_label' => $ar('الكمية / الوحدات:'),
+    'unit_name'      => $ar($record->unit ?? ''), // e.g., جرام، ساعة
+    'quantity_val'   => number_format($record->quantity, 2),
+
+    'notes_label'    => $ar('ملاحظات:'),
+    'notes'          => $ar($record->notes),
+    'footer_text'    => $ar('تم استخراج هذا السند آلياً من نظام تعدين للمحاسبة'),
+    'extract_date'   => $ar('تاريخ الاستخراج:'),
+    'id_label'       => $ar('رقم السند:'),
+    'date_label'     => $ar('التاريخ:'),
+    'total_label'    => $ar('المبلغ الإجمالي:'),
+        ];
+
+        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('pdf.invoice', $data)
+            ->setPaper('a4')
+            ->setOption('defaultFont', 'DejaVu Sans'); 
+        
+        return response()->streamDownload(function () use ($pdf) {
+            echo $pdf->output();
+        }, "transaction-{$record->id}.pdf");
+    }), 
+                    ViewAction::make(), EditAction::make()])
 
                         ->bulkActions([BulkActionGroup::make([DeleteBulkAction::make()])]);
 

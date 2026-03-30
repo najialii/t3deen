@@ -6,20 +6,20 @@ use App\Filament\Resources\MachineResource\Pages;
 use App\Filament\Traits\ScopedToRefinery;
 use App\Models\Machine;
 use App\Models\Refinery;
-use Illuminate\Support\Facades\Auth;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
+use Filament\Actions\ViewAction;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
-use Filament\Actions\EditAction;
-use Filament\Actions\ViewAction;
-use Filament\Actions\BulkActionGroup;
-use Filament\Actions\DeleteBulkAction;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
+use Illuminate\Support\Facades\Auth;
 
 class MachineResource extends Resource
 {
@@ -30,21 +30,46 @@ class MachineResource extends Resource
     public static function shouldRegisterNavigation(): bool
     {
         $user = Auth::user();
+
         return $user?->isRefineryAdmin() || $user?->isSalesManager();
     }
 
     public static function canAccess(): bool
     {
         $user = Auth::user();
+
         return $user?->isRefineryAdmin() || $user?->isSalesManager();
     }
 
-    public static function getNavigationIcon(): string|\BackedEnum|null { return 'heroicon-o-cog-6-tooth'; }
-    public static function getNavigationSort(): ?int { return 1; }
-    public static function getNavigationGroup(): string|\UnitEnum|null { return 'العمليات'; }
-    public static function getNavigationLabel(): string { return 'الآلات'; }
-    public static function getModelLabel(): string { return 'آلة'; }
-    public static function getPluralModelLabel(): string { return 'الآلات'; }
+    public static function getNavigationIcon(): string|\BackedEnum|null
+    {
+        return 'heroicon-o-cog-6-tooth';
+    }
+
+    public static function getNavigationSort(): ?int
+    {
+        return 1;
+    }
+
+    public static function getNavigationGroup(): string|\UnitEnum|null
+    {
+        return 'العمليات';
+    }
+
+    public static function getNavigationLabel(): string
+    {
+        return 'الآلات';
+    }
+
+    public static function getModelLabel(): string
+    {
+        return 'آلة';
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return 'الآلات';
+    }
 
     public static function form(Schema $schema): Schema
     {
@@ -66,6 +91,7 @@ class MachineResource extends Resource
                     if ($user->isSystemAdmin()) {
                         return Refinery::pluck('name', 'id');
                     }
+
                     return Refinery::where('id', $user->refinery_id)->pluck('name', 'id');
                 })
                 ->searchable()
@@ -96,9 +122,9 @@ class MachineResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index'  => Pages\ListMachines::route('/'),
+            'index' => Pages\ListMachines::route('/'),
             'create' => Pages\CreateMachine::route('/create'),
-            'edit'   => Pages\EditMachine::route('/{record}/edit'),
+            'edit' => Pages\EditMachine::route('/{record}/edit'),
         ];
     }
 }

@@ -10,13 +10,13 @@ use App\Filament\Resources\Payrolls\Pages\ViewPayroll;
 use App\Filament\Resources\Payrolls\Schemas\PayrollForm;
 use App\Filament\Resources\Payrolls\Schemas\PayrollInfolist;
 use App\Filament\Resources\Payrolls\Tables\PayrollsTable;
-use App\Models\payroll;
-use BackedEnum;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
 use Illuminate\Support\Facades\Auth;
+use App\Models\payroll;
+use BackedEnum;
 
 class PayrollResource extends Resource
 {
@@ -43,23 +43,22 @@ class PayrollResource extends Resource
 
     public static function getNavigationGroup(): string|\UnitEnum|null 
 { 
-    // This keeps it in the same "Finance" folder in your sidebar
-    return 'المالية'; 
+   return 'المالية'; 
 }
 
 public static function getNavigationLabel(): string 
 { 
-    return 'مسيرات الرواتب'; // Payroll Sheets / Records
+    return 'مسيرات الرواتب'; 
 }
 
 public static function getModelLabel(): string 
 { 
-    return 'راتب'; // Salary / Payroll Entry
+    return 'راتب'; 
 }
 
 public static function getPluralModelLabel(): string 
 { 
-    return 'الرواتب'; // Salaries / Payrolls
+    return 'الرواتب'; 
 } 
 
     public static function form(Schema $schema): Schema
