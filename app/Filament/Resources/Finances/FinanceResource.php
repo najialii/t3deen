@@ -15,14 +15,47 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
-
+use App\Filament\Traits\ScopedToRefinery;
+use Illuminate\Support\Facades\Auth;
+ 
 class FinanceResource extends Resource
 {
+    use ScopedToRefinery;
     protected static ?string $model = Finance::class;
 
+    public static function shouldRegisterNavigation(): bool
+    {
+        $user = Auth::user();
+        return $user?->isRefineryAdmin() || $user?->isSalesManager();
+    }
+
+    public static function canAccess(): bool
+    {
+        $user = Auth::user();
+        return $user?->isRefineryAdmin() || $user?->isSalesManager();
+    }   
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
 
     protected static ?string $recordTitleAttribute = 'Finance';
+    public static function getNavigationGroup(): string|\UnitEnum|null 
+{ 
+    return 'المالية';   
+}
+
+public static function getNavigationLabel(): string 
+{ 
+    return 'السجلات المالية'; 
+}
+
+public static function getModelLabel(): string 
+{ 
+    return 'قيد مالي'; 
+}
+
+public static function getPluralModelLabel(): string 
+{ 
+    return 'المالية'; 
+}
 
     public static function form(Schema $schema): Schema
     {

@@ -3,10 +3,12 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\Auth;
 
 return new class extends Migration
 {
     public function up(): void
+    
     {
         Schema::create('finances', function (Blueprint $table) {
             $table->id();
@@ -15,7 +17,7 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained()->restrictOnDelete();
 
             $table->string('category'); 
-            $table->enum('type', ['income', 'expense']);
+            $table->enum('type', ['دائن', 'مدين']);
             $table->decimal('amount', 15, 2);
             
             $table->nullableMorphs('reference'); 
