@@ -29,6 +29,7 @@ return new class extends Migration
             $table->decimal('net_pay', 15, 2)->comment('صافي الراتب');
             
             // Metadata
+            
             $table->string('payment_method')->default('cash')->comment('طريقة الدفع');
             $table->enum('status', ['draft', 'paid', 'cancelled'])->default('draft');
             $table->timestamp('paid_at')->nullable();
